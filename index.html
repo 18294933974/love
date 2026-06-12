@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小朱 ❤️ 小路 — 我们的甜蜜小窝</title>
+  <style>
+    /* ============================================================
+       🎨 CSS 变量 & 配色 — 改颜色在这里！
+       ============================================================ */
+    :root {
+      --pink: #FF6B9D;
+      --pink-light: #FFB3C6;
+      --pink-pale: #FFE5EC;
+      --peach: #FFDAB9;
+      --coral: #FF8C94;
+      --lavender: #E8D5F5;
+      --mint: #C1F0E6;
+      --sky: #C9E8FF;
+      --bg: #FFF5F7;
+      --card: #FFFFFF;
+      --text: #5D4E5D;
+      --text-light: #9B8E9B;
+      --text-lighter: #C4B8C4;
+      --gold: #FFD700;
+      --shadow-sm: 0 2px 8px rgba(255, 107, 157, 0.10);
+      --shadow-md: 0 4px 16px rgba(255, 107, 157, 0.15);
+      --shadow-lg: 0 8px 30px rgba(255, 107, 157, 0.20);
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --radius-lg: 28px;
+      --radius-full: 50px;
+      --max-width: 680px;
+      --tab-height: 70px;
+    }
+
+    /* ============================================================
+       📐 基础重置 & 排版
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      /* 可爱的背景纹理：淡色圆点 */
+      background-image: radial-gradient(circle, rgba(255, 179, 198, 0.15) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--pink-light); border-radius: 10px; }
+
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.2rem; }
+
+    a { color: var(--pink); text-decoration: none; }
+
+    /* ============================================================
+       🏗️ App 布局容器
+       ============================================================ */
+    #app {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 20px 16px calc(var(--tab-height) + 24px);
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    /* ============================================================
+       📄 页面容器 & 切换动画
+       ============================================================ */
+    #page-container {
+      position: relative;
+      min-height: 400px;
+    }
+
+    .page {
+      display: none;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      padding-bottom: 10px;
+    }
+
+    .page.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================================
+       🧭 底部导航栏
+       ============================================================ */
+    #tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: var(--tab-height);
+      padding: 0 8px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+      border-top: 1px solid var(--pink-pale);
+      box-shadow: 0 -2px 16px rgba(255, 107, 157, 0.08);
+    }
+
+    .tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--text-light);
+      font-family: inherit;
+      font-size: 0.7rem;
+      min-width: 56px;
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .tab-btn .tab-icon {
+      font-size: 1.4rem;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      line-height: 1;
+    }
+
+    .tab-btn.active {
+      color: var(--pink);
+    }
+
+    .tab-btn.active .tab-icon {
+      transform: scale(1.15);
+    }
+
+    .tab-btn.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 3px;
+      background: var(--pink);
+      border-radius: 0 0 4px 4px;
+    }
+
+    /* 点击波纹 */
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-md);
+      background: var(--pink-pale);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tab-btn:active::after { opacity: 1; }
+
+    /* ============================================================
+       🎴 通用卡片
+       ============================================================ */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ============================================================
+       🏠 首页样式
+       ============================================================ */
+    .home-hero {
+      text-align: center;
+      padding: 50px 16px 30px;
+    }
+
+    .home-hero .decoration {
+      font-size: 1.5rem;
+      letter-spacing: 8px;
+      margin-bottom: 12px;
+      animation: bounceGentle 2s ease-in-out infinite;
+    }
+
+    .home-hero .names {
+      font-size: 2.4rem;
+      font-weight: 900;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .home-hero .names .name-him {
+      background: linear-gradient(135deg, #FF6B9D, #FF8C94);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .home-hero .names .name-her {
+      background: linear-gradient(135deg, #FF85A2, #FFB3C6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .home-hero .heart-pulse {
+      display: inline-block;
+      font-size: 2rem;
+      animation: pulse 1.4s ease-in-out infinite;
+      margin: 0 4px;
+    }
+
+    .home-hero .subtitle {
+      font-size: 1rem;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    /* 天数卡片 */
+    .days-card {
+      text-align: center;
+      background: linear-gradient(135deg, #FFF5F7, #FFE5EC);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      margin: 16px 0 24px;
+      border: 2px dashed var(--pink-light);
+    }
+
+    .days-card .days-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+
+    .days-card .days-number {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--pink);
+      line-height: 1.1;
+    }
+
+    .days-card .days-number small {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .days-card .days-date {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-top: 8px;
+    }
+
+    .home-emoji-row {
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 10px;
+      margin-top: 8px;
+    }
+
+    /* ============================================================
+       💕 关于我们样式
+       ============================================================ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .profile-card {
+      text-align: center;
+      padding: 28px 16px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+
+    .profile-card.zhu::before {
+      background: linear-gradient(90deg, #FFB3C6, #FF85A2, #FFB3C6);
+    }
+
+    .profile-card.lu::before {
+      background: linear-gradient(90deg, #87CEEB, #6CB4EE, #87CEEB);
+    }
+
+    .profile-avatar {
+      font-size: 3.5rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .profile-name {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .profile-info {
+      text-align: left;
+      font-size: 0.9rem;
+      line-height: 2;
+    }
+
+    .profile-info .info-label {
+      display: inline-block;
+      min-width: 44px;
+      color: var(--text-light);
+    }
+
+    .profile-tagline {
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: var(--pink-pale);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      color: var(--pink);
+      font-style: italic;
+    }
+
+    /* ============================================================
+       📸 相册样式
+       ============================================================ */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .photo-card {
+      background: var(--card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      /* 拍立得风格白边 */
+      padding: 8px 8px 6px;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-4px) rotate(1deg);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .photo-card:nth-child(even):hover {
+      transform: translateY(-4px) rotate(-1deg);
+    }
+
+    .photo-card .photo-inner {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: calc(var(--radius-md) - 4px);
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .photo-card:hover img {
+      transform: scale(1.08);
+    }
+
+    .photo-caption {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-light);
+      padding: 6px 4px 2px;
+    }
+
+    /* ============================================================
+       🖼️ 灯箱
+       ============================================================ */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      cursor: pointer;
+    }
+
+    #lightbox.show {
+      display: flex;
+    }
+
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+      cursor: default;
+    }
+
+    #lightbox .close-btn {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      z-index: 201;
+    }
+
+    #lightbox .close-btn:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    /* ============================================================
+       💝 纪念日样式
+       ============================================================ */
+    .countdown-card {
+      text-align: center;
+      padding: 28px 20px;
+      background: linear-gradient(135deg, #FFE5EC, #FFDAB9);
+      border-radius: var(--radius-lg);
+      margin: 16px 0 24px;
+      border: 2px solid var(--pink-light);
+    }
+
+    .countdown-card .countdown-label {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .countdown-card .countdown-event {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--pink);
+      margin: 4px 0;
+    }
+
+    .countdown-card .countdown-number {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--pink);
+      line-height: 1.1;
+    }
+
+    .countdown-card .countdown-number small {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .countdown-card .countdown-target {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .date-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .date-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 16px;
+      background: var(--card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid var(--pink-light);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .date-card:hover {
+      transform: translateX(4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .date-card .date-emoji {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .date-card .date-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .date-card .date-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .date-card .date-full {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .date-card .date-elapsed {
+      font-size: 0.85rem;
+      color: var(--pink);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       ✨ 心愿墙样式
+       ============================================================ */
+    .wish-form-card {
+      margin-bottom: 20px;
+    }
+
+    .wish-form-card textarea {
+      width: 100%;
+      height: 80px;
+      border: 2px solid var(--pink-pale);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+      transition: border-color 0.25s;
+      color: var(--text);
+      background: #FFFAFB;
+    }
+
+    .wish-form-card textarea:focus {
+      outline: none;
+      border-color: var(--pink);
+    }
+
+    .wish-form-card textarea::placeholder {
+      color: var(--text-lighter);
+    }
+
+    .wish-form-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .wish-form-row select {
+      padding: 10px 14px;
+      border: 2px solid var(--pink-pale);
+      border-radius: var(--radius-full);
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: #FFFAFB;
+      color: var(--text);
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      padding-right: 30px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23FF6B9D'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    .wish-form-row select:focus {
+      outline: none;
+      border-color: var(--pink);
+    }
+
+    .btn {
+      padding: 10px 24px;
+      border: none;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, #FF6B9D, #FF85A2);
+      color: white;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px rgba(255, 107, 157, 0.25);
+    }
+
+    /* 心愿卡片 — 便利贴风格 */
+    .wishes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .wish-card {
+      padding: 18px 18px 14px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      /* 轻微旋转模拟便利贴 */
+      transform: rotate(-0.5deg);
+    }
+
+    .wish-card:nth-child(even) {
+      transform: rotate(0.5deg);
+    }
+
+    .wish-card:hover {
+      transform: rotate(0deg) translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .wish-card .wish-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .wish-card .wish-author {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .wish-card .wish-date {
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+
+    .wish-card .wish-message {
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .wish-card .wish-delete {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.06);
+      color: var(--text-light);
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s;
+      line-height: 1;
+    }
+
+    .wish-card .wish-delete:hover {
+      background: var(--coral);
+      color: white;
+    }
+
+    /* 空状态 */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-light);
+    }
+
+    .empty-state .empty-emoji {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    /* ============================================================
+       🫧 浮动爱心
+       ============================================================ */
+    #hearts-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 300;
+      overflow: hidden;
+    }
+
+    .floating-heart {
+      position: absolute;
+      bottom: -40px;
+      font-size: 1.2rem;
+      animation: floatUp ease-out forwards;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(0.5);
+        opacity: 0.9;
+      }
+      30% {
+        transform: translateY(-30vh) rotate(15deg) scale(1);
+        opacity: 0.9;
+      }
+      70% {
+        opacity: 0.5;
+      }
+      100% {
+        transform: translateY(-105vh) rotate(-20deg) scale(0.3);
+        opacity: 0;
+      }
+    }
+
+    /* ============================================================
+       🎬 各种动画
+       ============================================================ */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.28); }
+    }
+
+    @keyframes bounceGentle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-5px); }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    /* 页面标题 */
+    .page-title {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #FF6B9D, #FF85A2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    /* ============================================================
+       📱 响应式 — 手机适配
+       ============================================================ */
+    @media (max-width: 480px) {
+      html { font-size: 15px; }
+
+      #app { padding: 14px 10px calc(var(--tab-height) + 16px); }
+
+      .home-hero { padding: 30px 8px 16px; }
+      .home-hero .names { font-size: 1.8rem; }
+      .days-card .days-number { font-size: 2.8rem; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 12px; }
+
+      .gallery-grid { gap: 8px; }
+
+      .tab-btn { font-size: 0.65rem; padding: 6px 8px; min-width: 48px; }
+      .tab-btn .tab-icon { font-size: 1.3rem; }
+
+      .countdown-card .countdown-number { font-size: 2.8rem; }
+
+      .wish-form-row { flex-wrap: wrap; }
+      .wish-form-row .btn { width: 100%; }
+    }
+
+    @media (min-width: 768px) {
+      .gallery-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    /* ============================================================
+       🔒 密码保护
+       ============================================================ */
+    #password-gate {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #FFF5F7, #FFE5EC, #FFDAB9);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #password-gate.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .pw-box {
+      text-align: center;
+      background: white;
+      padding: 40px 30px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      max-width: 340px;
+      width: 90%;
+    }
+
+    .pw-box .pw-emoji {
+      font-size: 3.5rem;
+      display: block;
+      margin-bottom: 8px;
+      animation: bounceGentle 2s ease-in-out infinite;
+    }
+
+    .pw-box h3 {
+      color: var(--pink);
+      margin-bottom: 4px;
+    }
+
+    .pw-box .pw-hint {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .pw-box input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid var(--pink-pale);
+      border-radius: var(--radius-full);
+      font-size: 1.1rem;
+      text-align: center;
+      font-family: inherit;
+      color: var(--text);
+      letter-spacing: 4px;
+      transition: border-color 0.25s;
+    }
+
+    .pw-box input:focus {
+      outline: none;
+      border-color: var(--pink);
+    }
+
+    .pw-box .pw-btn {
+      margin-top: 14px;
+      width: 100%;
+    }
+
+    .pw-box .pw-error {
+      color: var(--coral);
+      font-size: 0.85rem;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔒 密码保护层 -->
+  <div id="password-gate">
+    <div class="pw-box">
+      <span class="pw-emoji">🔐</span>
+      <h3>这是我们的秘密小窝</h3>
+      <p class="pw-hint">请输入密码进入 💕</p>
+      <input type="password" id="pwInput" placeholder="输入密码..." maxlength="20" autocomplete="off">
+      <button class="btn pw-btn" onclick="checkPassword()">💕 进入</button>
+      <p class="pw-error" id="pwError"></p>
+    </div>
+  </div>
+
+  <div id="app">
+    <!-- ============================================================
+         📄 页面容器
+         ============================================================ -->
+    <main id="page-container">
+
+      <!-- ========== 🏠 首页 ========== -->
+      <section id="page-home" class="page active">
+        <div class="home-hero">
+          <div class="decoration">🌸 ✨ 🎀 ✨ 🌸</div>
+          <h1 class="names">
+            <!-- 🔧 改名字在这里！ -->
+            <span class="name-her">小朱</span>
+            <span class="heart-pulse">❤️</span>
+            <span class="name-him">小路</span>
+          </h1>
+          <p class="subtitle">我们的甜蜜小窝 🏡</p>
+        </div>
+
+        <div class="days-card">
+          <p class="days-label">💕 我们已经在一起</p>
+          <div class="days-number" id="daysTogether">--</div>
+          <p class="days-date" id="sinceDate">从 -- 开始</p>
+        </div>
+
+        <div class="home-emoji-row">🐻 🐰 🌸 💕 🎀 ✨</div>
+      </section>
+
+      <!-- ========== 💕 关于我们 ========== -->
+      <section id="page-about" class="page">
+        <h2 class="page-title">💕 关于我们</h2>
+        <p class="page-subtitle">两个可爱的人，一段甜甜的故事</p>
+
+        <div class="about-grid">
+          <!-- 小朱的卡片 -->
+          <div class="card profile-card zhu">
+            <span class="profile-avatar">🐰</span>
+            <div class="profile-name" style="color:#FF85A2;">小朱</div>
+            <div class="profile-info">
+              <!-- 🔧 改小朱的信息在这里！ -->
+              <div><span class="info-label">🎂 生日</span> 农历五月廿一</div>
+              <div><span class="info-label">🎀 爱好</span> 画画、猫咪</div>
+              <div><span class="info-label">🌟 特点</span> 温柔可爱</div>
+            </div>
+            <div class="profile-tagline">💬 "可可爱爱小仙女"</div>
+          </div>
+
+          <!-- 小路的卡片 -->
+          <div class="card profile-card lu">
+            <span class="profile-avatar">🐻</span>
+            <div class="profile-name" style="color:#6CB4EE;">小路</div>
+            <div class="profile-info">
+              <!-- 🔧 改小路的信息在这里！ -->
+              <div><span class="info-label">🎂 生日</span> 农历八月廿九</div>
+              <div><span class="info-label">⚽ 爱好</span> 篮球、游戏</div>
+              <div><span class="info-label">🌟 特点</span> 温柔体贴</div>
+            </div>
+            <div class="profile-tagline">💬 "温柔体贴大男孩"</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 📸 相册 ========== -->
+      <section id="page-gallery" class="page">
+        <h2 class="page-title">📸 我们的相册</h2>
+        <p class="page-subtitle">每一张照片，都是最好的回忆</p>
+
+        <div class="gallery-grid">
+          <!-- 🔧 改照片说明文字在这里！每个 photo-card 是一张照片 -->
+          <div class="photo-card" onclick="openLightbox('1509f7ed74e036ad60a0296abcdae092.jpg')">
+            <div class="photo-inner">
+              <img src="1509f7ed74e036ad60a0296abcdae092.jpg" loading="lazy" alt="合照1">
+            </div>
+            <p class="photo-caption">🌸 我们的合照</p>
+          </div>
+          <div class="photo-card" onclick="openLightbox('5a8ae3a2ef03bbdd8772e8cc57d1eed3.jpg')">
+            <div class="photo-inner">
+              <img src="5a8ae3a2ef03bbdd8772e8cc57d1eed3.jpg" loading="lazy" alt="合照2">
+            </div>
+            <p class="photo-caption">💕 甜蜜时刻</p>
+          </div>
+          <div class="photo-card" onclick="openLightbox('9e1ceb2267ddde0890621c5aca80d194.jpg')">
+            <div class="photo-inner">
+              <img src="9e1ceb2267ddde0890621c5aca80d194.jpg" loading="lazy" alt="合照3">
+            </div>
+            <p class="photo-caption">✨ 开心每一天</p>
+          </div>
+          <div class="photo-card" onclick="openLightbox('a013492e2d1943d53b5ec2d06e78ff23.jpg')">
+            <div class="photo-inner">
+              <img src="a013492e2d1943d53b5ec2d06e78ff23.jpg" loading="lazy" alt="合照4">
+            </div>
+            <p class="photo-caption">🎀 珍贵回忆</p>
+          </div>
+          <div class="photo-card" onclick="openLightbox('d50ce34bb9a965eeb740e45c26daf148.jpg')">
+            <div class="photo-inner">
+              <img src="d50ce34bb9a965eeb740e45c26daf148.jpg" loading="lazy" alt="合照5">
+            </div>
+            <p class="photo-caption">🐻🐰 在一起</p>
+          </div>
+          <div class="photo-card" onclick="openLightbox('f4976480b31f322d51c6011c852a4bb2.jpg')">
+            <div class="photo-inner">
+              <img src="f4976480b31f322d51c6011c852a4bb2.jpg" loading="lazy" alt="合照6">
+            </div>
+            <p class="photo-caption">💝 永远爱你</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 💝 纪念日 ========== -->
+      <section id="page-anniversary" class="page">
+        <h2 class="page-title">💝 我们的纪念日</h2>
+        <p class="page-subtitle">每一个重要的日子，都值得被记住</p>
+
+        <!-- 倒计时卡片 -->
+        <div class="countdown-card">
+          <p class="countdown-label">⏳ 距离下一个重要日子</p>
+          <p class="countdown-event" id="nextEventName">--</p>
+          <div class="countdown-number" id="countdownDays">--</div>
+          <p class="countdown-target" id="nextEventDate">--</p>
+        </div>
+
+        <!-- 重要日期列表 -->
+        <div class="date-list" id="dateList">
+          <!-- JS 动态生成 -->
+        </div>
+      </section>
+
+      <!-- ========== ✨ 心愿墙 ========== -->
+      <section id="page-wishwall" class="page">
+        <h2 class="page-title">✨ 心愿墙</h2>
+        <p class="page-subtitle">把想说的话，留在这里吧 💌</p>
+
+        <!-- 写心愿的表单 -->
+        <div class="card wish-form-card">
+          <textarea id="wishInput" placeholder="我想说... 💭" maxlength="200"></textarea>
+          <div class="wish-form-row">
+            <select id="wishAuthor">
+              <!-- 🔧 改署名选项在这里！ -->
+              <option value="小朱">🐰 小朱</option>
+              <option value="小路">🐻 小路</option>
+            </select>
+            <button class="btn" onclick="addWish()">💕 留下心愿</button>
+          </div>
+        </div>
+
+        <!-- 心愿列表 -->
+        <div class="wishes-list" id="wishesList">
+          <!-- JS 动态生成 -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ============================================================
+         🧭 底部导航栏
+         ============================================================ -->
+    <nav id="tab-bar">
+      <button class="tab-btn active" data-page="home" onclick="switchPage('home')">
+        <span class="tab-icon">🏠</span>
+        <span>首页</span>
+      </button>
+      <button class="tab-btn" data-page="about" onclick="switchPage('about')">
+        <span class="tab-icon">💕</span>
+        <span>关于我们</span>
+      </button>
+      <button class="tab-btn" data-page="gallery" onclick="switchPage('gallery')">
+        <span class="tab-icon">📸</span>
+        <span>相册</span>
+      </button>
+      <button class="tab-btn" data-page="anniversary" onclick="switchPage('anniversary')">
+        <span class="tab-icon">💝</span>
+        <span>纪念日</span>
+      </button>
+      <button class="tab-btn" data-page="wishwall" onclick="switchPage('wishwall')">
+        <span class="tab-icon">✨</span>
+        <span>心愿墙</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ============================================================
+       🖼️ 灯箱（照片放大查看）
+       ============================================================ -->
+  <div id="lightbox" onclick="closeLightbox()">
+    <button class="close-btn" onclick="closeLightbox()" aria-label="关闭">✕</button>
+    <img id="lightboxImg" src="" alt="照片" onclick="event.stopPropagation()">
+  </div>
+
+  <!-- ============================================================
+       🫧 浮动爱心容器
+       ============================================================ -->
+  <div id="hearts-layer"></div>
+
+  <!-- ============================================================
+       📜 所有 JavaScript 逻辑
+       ============================================================ -->
+  <script>
+    // ==============================================================
+    // 🔒 密码验证
+    // ==============================================================
+    // 🔧 在这里修改密码！
+    var SITE_PASSWORD = '5201314'; // ← 默认密码，改成你们想要的
+    // ==============================================================
+
+    var PW_KEY = 'pw_verified_love';
+
+    function checkPassword() {
+      var input = document.getElementById('pwInput');
+      var errorEl = document.getElementById('pwError');
+      var entered = input.value.trim();
+
+      if (!entered) {
+        errorEl.textContent = '请输入密码哦~ 💭';
+        input.focus();
+        return;
+      }
+
+      if (entered === SITE_PASSWORD) {
+        // 密码正确
+        errorEl.textContent = '';
+        document.getElementById('password-gate').classList.add('hidden');
+        try {
+          localStorage.setItem(PW_KEY, 'true');
+        } catch(e) {}
+      } else {
+        // 密码错误
+        errorEl.textContent = '密码不对哦，再想想~ 🤔';
+        input.value = '';
+        input.focus();
+        // 抖动效果
+        input.style.animation = 'none';
+        input.offsetHeight; // reflow
+        input.style.animation = 'shake 0.4s ease';
+      }
+    }
+
+    // 按回车提交
+    document.addEventListener('DOMContentLoaded', function() {
+      var pwInput = document.getElementById('pwInput');
+      if (pwInput) {
+        pwInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            checkPassword();
+          }
+        });
+      }
+
+      // 如果之前验证过，跳过密码
+      var verified = null;
+      try {
+        verified = localStorage.getItem(PW_KEY);
+      } catch(e) {}
+      if (verified === 'true') {
+        document.getElementById('password-gate').classList.add('hidden');
+      } else {
+        // 自动聚焦密码框
+        setTimeout(function() { pwInput.focus(); }, 300);
+      }
+    });
+
+    // ==============================================================
+    // 🔧 重要日期配置 — 在这里修改你们的纪念日！
+    // ⚠️ 农历生日每年公历日期不同，每年需要更新一次！
+    //    2026年：小朱(五月廿一)=7月5日, 小路(八月廿九)=10月9日
+    // ==============================================================
+    const ANNIVERSARY_DATE = '2024-02-20'; // ← 在一起的纪念日 (年-月-日)
+    const importantDates = [
+      { name: '💕 在一起的日子', date: '2024-02-20', emoji: '💘' },
+      { name: '🎂 小朱生日(农历五月廿一)', date: '2026-07-05', emoji: '🎀' },
+      { name: '🎂 小路生日(农历八月廿九)', date: '2026-10-09', emoji: '🎈' },
+    ];
+    // ==============================================================
+
+    // ==============================================================
+    // 📄 页面切换
+    // ==============================================================
+    function switchPage(pageId) {
+      // 切换页面
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('page-' + pageId);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      // 切换导航状态
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      const btn = document.querySelector(`.tab-btn[data-page="${pageId}"]`);
+      if (btn) {
+        btn.classList.add('active');
+      }
+
+      // 滚动到顶部
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // 切换到纪念日页时刷新倒计时
+      if (pageId === 'anniversary') {
+        renderAnniversary();
+      }
+    }
+
+    // ==============================================================
+    // 📅 日期计算工具
+    // ==============================================================
+    function daysBetween(date1, date2) {
+      const ms = date2.getTime() - date1.getTime();
+      return Math.floor(ms / (1000 * 60 * 60 * 24));
+    }
+
+    function formatDateCN(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
+    }
+
+    // ==============================================================
+    // 🏠 首页 — 在一起天数
+    // ==============================================================
+    function updateDaysTogether() {
+      const start = new Date(ANNIVERSARY_DATE + 'T00:00:00');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const days = daysBetween(start, today);
+      const el = document.getElementById('daysTogether');
+      if (el) {
+        el.innerHTML = days + '<small> 天</small>';
+      }
+      const sinceEl = document.getElementById('sinceDate');
+      if (sinceEl) {
+        sinceEl.textContent = '从 ' + formatDateCN(ANNIVERSARY_DATE) + ' 开始';
+      }
+    }
+
+    // ==============================================================
+    // 💝 纪念日 — 倒计时 & 日期列表
+    // ==============================================================
+    function findNextDate() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const thisYear = today.getFullYear();
+
+      let next = null;
+      let minDays = Infinity;
+
+      for (const item of importantDates) {
+        const d = new Date(item.date + 'T00:00:00');
+        // 今年的这个日期
+        const thisYearDate = new Date(thisYear, d.getMonth(), d.getDate());
+        // 明年的这个日期
+        const nextYearDate = new Date(thisYear + 1, d.getMonth(), d.getDate());
+
+        // 如果今年已经过了，用明年的
+        const target = thisYearDate >= today ? thisYearDate : nextYearDate;
+        const remaining = daysBetween(today, target);
+
+        if (remaining < minDays) {
+          minDays = remaining;
+          next = { ...item, targetDate: target, remainingDays: remaining };
+        }
+      }
+
+      return next;
+    }
+
+    function renderAnniversary() {
+      // 倒计时
+      const next = findNextDate();
+      if (next) {
+        document.getElementById('nextEventName').textContent = next.emoji + ' ' + next.name;
+        const daysEl = document.getElementById('countdownDays');
+        if (next.remainingDays === 0) {
+          daysEl.innerHTML = '🎉 就是今天！';
+        } else {
+          daysEl.innerHTML = next.remainingDays + '<small> 天</small>';
+        }
+        document.getElementById('nextEventDate').textContent = formatDateCN(
+          next.targetDate.toISOString().split('T')[0]
+        );
+      }
+
+      // 日期列表
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const listEl = document.getElementById('dateList');
+      let html = '';
+
+      for (const item of importantDates) {
+        const d = new Date(item.date + 'T00:00:00');
+        const elapsed = daysBetween(d, today);
+
+        html += `
+          <div class="date-card fade-in-up">
+            <span class="date-emoji">${item.emoji}</span>
+            <div class="date-info">
+              <div class="date-name">${item.name}</div>
+              <div class="date-full">${formatDateCN(item.date)}</div>
+            </div>
+            <span class="date-elapsed">
+              ${elapsed >= 0 ? '已经 ' + elapsed + ' 天' : '还有 ' + Math.abs(elapsed) + ' 天'}
+            </span>
+          </div>
+        `;
+      }
+
+      listEl.innerHTML = html;
+    }
+
+    // ==============================================================
+    // 🖼️ 灯箱
+    // ==============================================================
+    function openLightbox(src) {
+      const lb = document.getElementById('lightbox');
+      const img = document.getElementById('lightboxImg');
+      img.src = src;
+      lb.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      const lb = document.getElementById('lightbox');
+      lb.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    // ESC 关闭灯箱
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    });
+
+    // ==============================================================
+    // 🫧 浮动爱心
+    // ==============================================================
+    const hearts = ['❤️', '💕', '💖', '💗', '💝', '🌸', '✨', '🎀', '💘', '🩷'];
+
+    function createHeart() {
+      const container = document.getElementById('hearts-layer');
+      if (!container) return;
+
+      const heart = document.createElement('span');
+      heart.className = 'floating-heart';
+      heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      heart.style.left = Math.random() * 95 + '%';
+      heart.style.fontSize = (1 + Math.random() * 1.8) + 'rem';
+      heart.style.animationDuration = (5 + Math.random() * 7) + 's';
+      heart.style.animationDelay = '0s';
+
+      container.appendChild(heart);
+
+      // 动画结束后清理
+      heart.addEventListener('animationend', function() {
+        heart.remove();
+      });
+    }
+
+    // 首页可见时才生成爱心
+    let heartInterval = null;
+
+    function startHearts() {
+      if (heartInterval) return;
+      createHeart(); // 立即生成一个
+      heartInterval = setInterval(createHeart, 800);
+    }
+
+    function stopHearts() {
+      if (heartInterval) {
+        clearInterval(heartInterval);
+        heartInterval = null;
+      }
+    }
+
+    // 根据当前页面控制爱心
+    function updateHeartsForPage(pageId) {
+      if (pageId === 'home') {
+        startHearts();
+      } else {
+        stopHearts();
+      }
+    }
+
+    // 增强 switchPage，加入爱心控制
+    const originalSwitchPage = switchPage;
+    switchPage = function(pageId) {
+      originalSwitchPage(pageId);
+      updateHeartsForPage(pageId);
+    };
+
+    // ==============================================================
+    // ✨ 心愿墙 — localStorage CRUD
+    // ==============================================================
+    const STORAGE_KEY = 'loveWishes_xiaozhu_xiaolu';
+
+    function loadWishes() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveWishes(wishes) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(wishes));
+      } catch (e) {
+        alert('存储空间不足，请清理一些旧心愿~ 🙏');
+      }
+    }
+
+    function renderWishes() {
+      const wishes = loadWishes();
+      const listEl = document.getElementById('wishesList');
+
+      if (!listEl) return;
+
+      if (wishes.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state">
+            <span class="empty-emoji">💌</span>
+            <p>还没有心愿哦~</p>
+            <p style="font-size:0.85rem;margin-top:4px;">快来留下第一个甜蜜的愿望吧 🌸</p>
+          </div>
+        `;
+        return;
+      }
+
+      // 最新在前
+      const sorted = [...wishes].reverse();
+
+      // 温柔的马卡龙色背景
+      const colors = [
+        '#FFE5EC', '#FFDAB9', '#E8D5F5', '#C1F0E6',
+        '#C9E8FF', '#FFF0E0', '#FDE0E8', '#E0F0E8',
+      ];
+
+      let html = '';
+      for (const w of sorted) {
+        const bg = w.color || colors[Math.floor(Math.random() * colors.length)];
+        const emoji = w.author === '小朱' ? '🐰' : '🐻';
+        html += `
+          <div class="wish-card fade-in-up" style="background:${bg};">
+            <button class="wish-delete" onclick="deleteWish(${w.id})" title="删除">✕</button>
+            <div class="wish-header">
+              <span class="wish-author">${emoji} ${w.author}</span>
+              <span class="wish-date">${w.date}</span>
+            </div>
+            <p class="wish-message">${escapeHtml(w.message)}</p>
+          </div>
+        `;
+      }
+
+      listEl.innerHTML = html;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function addWish() {
+      const inputEl = document.getElementById('wishInput');
+      const authorEl = document.getElementById('wishAuthor');
+
+      const message = inputEl.value.trim();
+      const author = authorEl.value;
+
+      if (!message) {
+        inputEl.focus();
+        inputEl.style.borderColor = 'var(--coral)';
+        setTimeout(function() { inputEl.style.borderColor = 'var(--pink-pale)'; }, 1500);
+        return;
+      }
+
+      const wishes = loadWishes();
+      const today = new Date();
+      const dateStr = today.getFullYear() + '年' + (today.getMonth() + 1) + '月' + today.getDate() + '日';
+
+      const colors = ['#FFE5EC', '#FFDAB9', '#E8D5F5', '#C1F0E6', '#C9E8FF', '#FFF0E0'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+      const newWish = {
+        id: Date.now(),
+        author: author,
+        message: message,
+        date: dateStr,
+        color: randomColor,
+      };
+
+      wishes.push(newWish);
+      saveWishes(wishes);
+      renderWishes();
+
+      // 清空输入
+      inputEl.value = '';
+      inputEl.focus();
+
+      // 小动画反馈
+      const btn = document.querySelector('.wish-form-card .btn');
+      const originalText = btn.textContent;
+      btn.textContent = '✅ 已留下！';
+      btn.style.background = 'linear-gradient(135deg, #7ECB9A, #6BBF8A)';
+      setTimeout(function() {
+        btn.textContent = originalText;
+        btn.style.background = '';
+      }, 1500);
+    }
+
+    function deleteWish(id) {
+      const wishes = loadWishes();
+      const updated = wishes.filter(function(w) { return w.id !== id; });
+
+      if (updated.length < wishes.length) {
+        saveWishes(updated);
+        renderWishes();
+      }
+    }
+
+    // ==============================================================
+    // 🚀 页面初始化
+    // ==============================================================
+    function init() {
+      updateDaysTogether();
+      renderAnniversary();
+      renderWishes();
+      startHearts(); // 默认在首页
+
+      // 每天0点刷新天数
+      const now = new Date();
+      const msToMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
+      setTimeout(function() {
+        updateDaysTogether();
+        setInterval(updateDaysTogether, 24 * 60 * 60 * 1000);
+      }, msToMidnight + 1000);
+    }
+
+    // DOM 加载完成后初始化
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
